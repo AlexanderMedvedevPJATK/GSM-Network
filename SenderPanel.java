@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class SenderPanel extends JPanel {
@@ -8,15 +9,18 @@ public class SenderPanel extends JPanel {
         JScrollPane senderDevicesPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         senderDevicesPane.getVerticalScrollBar().setUnitIncrement(7);
+        senderDevicesPane.setMaximumSize(new Dimension(220, 600));
 
         JPanel senderDevicesPanel = new JPanel();
         senderDevicesPanel.setLayout(new BoxLayout(senderDevicesPanel, BoxLayout.Y_AXIS));
-        senderDevicesPanel.add(Box.createRigidArea(new Dimension(180, 20)));
 
         senderDevicesPane.setViewportView(senderDevicesPanel);
 
-        JButton button = new JButton("add");
+        JButton button = new JButton("ADD");
+        button.setAlignmentY(BOTTOM_ALIGNMENT);
+        button.setAlignmentX(CENTER_ALIGNMENT);
         button.setPreferredSize(new Dimension(100, 40));
+        button.setMinimumSize(new Dimension(100, 40));
         button.addActionListener(e -> {
             String msg = "";
             while (msg.equals("")) {
@@ -37,8 +41,8 @@ public class SenderPanel extends JPanel {
         });
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        button.setAlignmentY(BOTTOM_ALIGNMENT);
-        button.setAlignmentX(CENTER_ALIGNMENT);
+
+
         add(Box.createRigidArea(new Dimension(180, 30)));
         add(Box.createVerticalGlue());
         add(senderDevicesPane);
@@ -57,6 +61,10 @@ public class SenderPanel extends JPanel {
         slider.setPaintLabels(true);
         slider.setMajorTickSpacing(10);
         JButton terminate = new JButton("Terminate");
+        terminate.addActionListener(e -> {
+            senderDevicesPanel.remove(sender);
+            revalidate();
+        });
         JLabel stateText = new JLabel("State");
         JComboBox<String> stateOptions = new JComboBox<>(new String[] {
                 "ON", "OFF"
@@ -66,8 +74,11 @@ public class SenderPanel extends JPanel {
         sliderText.setAlignmentX(CENTER_ALIGNMENT);
         stateText.setAlignmentX(CENTER_ALIGNMENT);
         terminate.setAlignmentX(CENTER_ALIGNMENT);
-        sender.setLayout(new BoxLayout(sender, BoxLayout.Y_AXIS));
 
+        sender.setLayout(new BoxLayout(sender, BoxLayout.Y_AXIS));
+        sender.setBorder(new LineBorder(Color.BLACK, 2));
+
+        sender.add(Box.createRigidArea(new Dimension(180, 10)));
         sender.add(phoneNumber);
         sender.add(Box.createRigidArea(new Dimension(180, 10)));
         sender.add(sliderText);
@@ -77,8 +88,8 @@ public class SenderPanel extends JPanel {
         sender.add(stateOptions);
         sender.add(Box.createRigidArea(new Dimension(180, 5)));
         sender.add(terminate);
+        sender.add(Box.createRigidArea(new Dimension(180, 10)));
 
         senderDevicesPanel.add(sender);
-        senderDevicesPanel.add(Box.createRigidArea(new Dimension(180, 25)));
     }
 }

@@ -9,8 +9,10 @@ public class Main extends JFrame {
 
         SenderPanel senderPanel = new SenderPanel();
         senderPanel.setPreferredSize(new Dimension(getWidth() / 5, getHeight()));
+
         BasesPanel basesPanel = new BasesPanel();
         basesPanel.setPreferredSize(new Dimension(getWidth() / 3 * 5, getHeight()));
+
         RecipientPanel recipientPanel = new RecipientPanel();
         recipientPanel.setPreferredSize(new Dimension(getWidth() / 5, getHeight()));
 
