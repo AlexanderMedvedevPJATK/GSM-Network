@@ -34,7 +34,8 @@ public class SenderPanel extends JPanel {
                 } else if (msg.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a value.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    makeSender(senderDevicesPanel);
+                    Sender sender = new Sender(new SMS(msg));
+                    makeSenderDevice(senderDevicesPanel);
                     revalidate();
                 }
             }
@@ -52,7 +53,7 @@ public class SenderPanel extends JPanel {
 
     }
 
-    public void makeSender(JPanel senderDevicesPanel) {
+    public void makeSenderDevice(JPanel senderDevicesPanel) {
         JPanel sender = new JPanel();
         JLabel phoneNumber = new JLabel("phoneNumber");
         JLabel sliderText = new JLabel("SMS per minute");

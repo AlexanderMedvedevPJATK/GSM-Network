@@ -23,7 +23,7 @@ public class RecipientPanel extends JPanel {
         button.setPreferredSize(new Dimension(100, 40));
         button.setMinimumSize(new Dimension(100, 40));
         button.addActionListener(e -> {
-            makeRecipient(recipientDevicesPanel);
+            makeRecipientDevice(recipientDevicesPanel);
             revalidate();
         });
 
@@ -37,7 +37,7 @@ public class RecipientPanel extends JPanel {
 
     }
 
-    public void makeRecipient(JPanel recipientDevicesPanel) {
+    public void makeRecipientDevice(JPanel recipientDevicesPanel) {
         JPanel recipient = new JPanel();
 
         JLabel phoneNumber = new JLabel("number");

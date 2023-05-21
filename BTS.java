@@ -6,6 +6,6 @@ public class BTS extends Thread {
     }
     @Override
     public void run() {
-        super.run();
+
     }
 }
