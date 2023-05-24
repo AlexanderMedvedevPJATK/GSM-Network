@@ -3,9 +3,11 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class RecipientPanel extends JPanel {
+    private RecipientController controller;
     public RecipientPanel() {
-        setBackground(Color.DARK_GRAY);
+        controller = new RecipientController(this);
 
+        setBackground(Color.DARK_GRAY);
 
         JScrollPane recipientDevicesPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -23,6 +25,7 @@ public class RecipientPanel extends JPanel {
         button.setPreferredSize(new Dimension(100, 40));
         button.setMinimumSize(new Dimension(100, 40));
         button.addActionListener(e -> {
+            controller.createRecipient();
             makeRecipientDevice(recipientDevicesPanel);
             revalidate();
         });

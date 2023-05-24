@@ -3,7 +3,12 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class SenderPanel extends JPanel {
+
+    SenderController controller;
+
     public SenderPanel() {
+        controller = new SenderController(this);
+
         setBackground(Color.RED);
 
         JScrollPane senderDevicesPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -22,7 +27,7 @@ public class SenderPanel extends JPanel {
         button.setPreferredSize(new Dimension(100, 40));
         button.setMinimumSize(new Dimension(100, 40));
         button.addActionListener(e -> {
-            String msg = "";
+            java.lang.String msg = "";
             while (msg.equals("")) {
                 msg = JOptionPane.showInputDialog(
                         null,
@@ -34,7 +39,7 @@ public class SenderPanel extends JPanel {
                 } else if (msg.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a value.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    Sender sender = new Sender(new SMS(msg));
+                    controller.createSender();
                     makeSenderDevice(senderDevicesPanel);
                     revalidate();
                 }
@@ -67,7 +72,7 @@ public class SenderPanel extends JPanel {
             revalidate();
         });
         JLabel stateText = new JLabel("State");
-        JComboBox<String> stateOptions = new JComboBox<>(new String[] {
+        JComboBox<java.lang.String> stateOptions = new JComboBox<>(new java.lang.String[] {
                 "ON", "OFF"
         });
 

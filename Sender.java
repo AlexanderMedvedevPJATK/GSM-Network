@@ -1,12 +1,13 @@
 public class Sender extends Thread {
-    private SMS sms;
-    private Recipient recipient;
 
-    public Sender(SMS sms) {
-        this.sms = sms;
-    }
+    private SMS sms;
+
     @Override
     public void run() {
+        sendSms();
+    }
 
+    public void sendSms() {
+        Storage.getBtsSenderLayer().assignSms("sms");
     }
 }
