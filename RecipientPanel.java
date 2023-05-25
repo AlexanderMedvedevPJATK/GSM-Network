@@ -25,8 +25,7 @@ public class RecipientPanel extends JPanel {
         button.setPreferredSize(new Dimension(100, 40));
         button.setMinimumSize(new Dimension(100, 40));
         button.addActionListener(e -> {
-            controller.createRecipient();
-            makeRecipientDevice(recipientDevicesPanel);
+            controller.createRecipient(makeRecipientDevice(recipientDevicesPanel));
             revalidate();
         });
 
@@ -40,19 +39,36 @@ public class RecipientPanel extends JPanel {
 
     }
 
-    public void makeRecipientDevice(JPanel recipientDevicesPanel) {
+    public JPanel makeRecipientDevice(JPanel recipientDevicesPanel) {
         JPanel recipient = new JPanel();
 
-        JLabel phoneNumber = new JLabel("number");
+        JLabel phoneNumber = new JLabel("SMS received: 0");
         phoneNumber.setAlignmentX(CENTER_ALIGNMENT);
 
         JCheckBox checkBox = new JCheckBox("Clear every 10 sec");
         checkBox.setVerticalTextPosition(SwingConstants.TOP);
         checkBox.setHorizontalTextPosition(SwingConstants.CENTER);
         checkBox.setAlignmentX(CENTER_ALIGNMENT);
+        checkBox.addActionListener(e -> {
+            new Thread(() -> {
+                while (checkBox.isSelected()) {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                    if(checkBox.isSelected()) {
+                        phoneNumber.setText("SMS received: 0");
+                        controller.resetSmsNumber(recipient);
+                        revalidate();
+                    }
+                }
+            }).start();
+        });
 
         JButton terminate = new JButton("Terminate");
         terminate.addActionListener(e -> {
+            Storage.removeRecipient(recipient);
             recipientDevicesPanel.remove(recipient);
             revalidate();
         });
@@ -70,5 +86,7 @@ public class RecipientPanel extends JPanel {
         recipient.add(Box.createRigidArea(new Dimension(180, 10)));
 
         recipientDevicesPanel.add(recipient);
+
+        return recipient;
     }
 }

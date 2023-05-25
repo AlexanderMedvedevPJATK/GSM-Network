@@ -5,7 +5,7 @@ public class BscLayer {
 
     private List<BSC> stations = new ArrayList<>();
 
-    public void assignSms(String sms) {
+    public void assignSms(SMS sms) {
         int minSmsNumber = stations.get(0).smsCounter;
         BSC minStation = stations.get(0);
         for (BSC station : stations) {
@@ -23,32 +23,41 @@ public class BscLayer {
     }
 
     public class BSC extends Thread {
-        private String sms;
+        private SMS sms;
         private int smsCounter;
-        public void sendSms() {
+        public void sendSms() throws Exception {
             int thisLayerIndex = Storage.getBscLayersList().indexOf(BscLayer.this);
             if (sms != null) {
                 if (thisLayerIndex != Storage.getBscLayersList().size() - 1) {
                     BscLayer next = Storage.getBscLayersList().get(thisLayerIndex + 1);
                     next.assignSms(sms);
                 } else {
-
+                    if (sms.getRecipient() == null) {
+                        throw new Exception();
+                    }
+                    sms.getRecipient().setSms(sms);
                 }
             }
         }
 
         @Override
         public void run() {
-            System.out.println(this + " thread started");
-            while (sms == null) {
+            while(true) {
+                while (sms == null) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    sendSms();
+                    sms = null;
+                    System.out.println("BSC sent the message");
+                } catch (Exception e) {
+                    System.out.println("Recipient is not found");
                 }
             }
-            sendSms();
-            System.out.println("BTS " + this + " got the message");
         }
     }
 }

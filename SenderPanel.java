@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.Objects;
 
 public class SenderPanel extends JPanel {
 
@@ -27,20 +28,19 @@ public class SenderPanel extends JPanel {
         button.setPreferredSize(new Dimension(100, 40));
         button.setMinimumSize(new Dimension(100, 40));
         button.addActionListener(e -> {
-            java.lang.String msg = "";
-            while (msg.equals("")) {
-                msg = JOptionPane.showInputDialog(
+            String sms = "";
+            while (sms.equals("")) {
+                sms = JOptionPane.showInputDialog(
                         null,
                         "Enter the sms",
                         "SMS",
                         JOptionPane.PLAIN_MESSAGE);
-                if (msg == null) {
+                if (sms == null) {
                     break;
-                } else if (msg.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please enter a value.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (sms.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a message.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    controller.createSender();
-                    makeSenderDevice(senderDevicesPanel);
+                    controller.createSender(sms, makeSenderDevice(senderDevicesPanel));
                     revalidate();
                 }
             }
@@ -58,24 +58,30 @@ public class SenderPanel extends JPanel {
 
     }
 
-    public void makeSenderDevice(JPanel senderDevicesPanel) {
+    public JPanel makeSenderDevice(JPanel senderDevicesPanel) {
         JPanel sender = new JPanel();
         JLabel phoneNumber = new JLabel("phoneNumber");
         JLabel sliderText = new JLabel("SMS per minute");
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 60, 5);
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 10);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
-        slider.setMajorTickSpacing(10);
+        slider.setMajorTickSpacing(1);
+        slider.addChangeListener(e -> {
+            controller.setFrequency(slider.getValue(), sender);
+        });
         JButton terminate = new JButton("Terminate");
         terminate.addActionListener(e -> {
+            controller.terminateSender(sender);
             senderDevicesPanel.remove(sender);
             revalidate();
         });
         JLabel stateText = new JLabel("State");
-        JComboBox<java.lang.String> stateOptions = new JComboBox<>(new java.lang.String[] {
+        JComboBox<String> stateOptions = new JComboBox<>(new String[] {
                 "ON", "OFF"
         });
-
+        stateOptions.addActionListener(e -> {
+            controller.setRunning(Objects.equals(stateOptions.getSelectedItem(), "ON"), sender);
+        });
         phoneNumber.setAlignmentX(CENTER_ALIGNMENT);
         sliderText.setAlignmentX(CENTER_ALIGNMENT);
         stateText.setAlignmentX(CENTER_ALIGNMENT);
@@ -97,5 +103,7 @@ public class SenderPanel extends JPanel {
         sender.add(Box.createRigidArea(new Dimension(180, 10)));
 
         senderDevicesPanel.add(sender);
+
+        return sender;
     }
 }
