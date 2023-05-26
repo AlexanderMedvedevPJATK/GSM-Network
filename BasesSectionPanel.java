@@ -4,19 +4,14 @@ import java.awt.*;
 
 public class BasesSectionPanel extends JPanel {
 
-    BasesController basesController;
-
     public BasesSectionPanel() {
-        basesController = new BasesController(this);
-
         setBackground(Color.ORANGE);
 
         BaseSectionPanel btsPanel1 = new BaseSectionPanel();
-        btsPanel1.createLayer();
+        btsPanel1.createLayer(true);
         btsPanel1.setAlignmentY(TOP_ALIGNMENT);
         btsPanel1.setBorder(new LineBorder(Color.BLACK, 2));
         btsPanel1.setLayout(new BoxLayout(btsPanel1, BoxLayout.X_AXIS));
-        basesController.createBtsSenderLayer();
 
         JPanel bscSectionWrapper = new JPanel();
         bscSectionWrapper.setLayout(new BoxLayout(bscSectionWrapper, BoxLayout.Y_AXIS));
@@ -25,8 +20,7 @@ public class BasesSectionPanel extends JPanel {
 
         BaseSectionPanel bscPanel = new BaseSectionPanel();
         bscPanel.setLayout(new BoxLayout(bscPanel, BoxLayout.X_AXIS));
-        bscPanel.createLayer();
-        basesController.addBscLayer();
+        bscPanel.createLayer(false);
 
         JPanel bscButtons = new JPanel();
         bscButtons.setBorder(new LineBorder(Color.BLACK, 1));
@@ -34,14 +28,12 @@ public class BasesSectionPanel extends JPanel {
 
         JButton addBscLayer = new JButton("+");
         addBscLayer.addActionListener(e -> {
-            bscPanel.createLayer();
-            basesController.addBscLayer();
+            bscPanel.createLayer(false);
             revalidate();
         });
         JButton removeBscLayer = new JButton("-");
         removeBscLayer.addActionListener(e -> {
             bscPanel.removeLayer();
-            basesController.removeBscLayer();
             revalidate();
         });
 
@@ -56,7 +48,7 @@ public class BasesSectionPanel extends JPanel {
         btsPanel2.setAlignmentY(TOP_ALIGNMENT);
         btsPanel2.setBorder(new LineBorder(Color.BLACK, 1));
         btsPanel2.setLayout(new BoxLayout(btsPanel2, BoxLayout.Y_AXIS));
-        btsPanel2.createLayer();
+        btsPanel2.createLayer(true);
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 

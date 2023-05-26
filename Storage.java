@@ -5,19 +5,29 @@ import java.util.List;
 import java.util.Map;
 
 public class Storage {
+    // Linking JPanel representations of senders to their logical classes
     private static Map<JPanel, Sender> senderMap = new HashMap<>();
+    // The first BTS layer
     private static BtsLayer btsSenderLayer;
-    private static List<BscLayer> bscLayersList = new ArrayList<>();
+    // All the BSC layers
+    private static List<BscLayer> bscLayerList = new ArrayList<>();
+    // Linking JPanel representations of BscLayers to their logical classes
+    private static Map<JPanel, BscLayer> bscLayerMap = new HashMap<>();
+    // Reversed
+    private static Map<BscLayer, JPanel> bscLayerReverseMap = new HashMap<>();
+    // The last BTS layer
     private static BtsLayer btsRecipientLayer;
+    // Linking JPanel representations of the stations to their logical classes
+    private static Map<JPanel, Layer.Station> panelStationMap = new HashMap<>();
+    // Linking JPanel representations of the recipients to their logical classes
     private static Map<JPanel, Recipient> recipientMap = new HashMap<>();
+    // Reversed
     private static Map<Recipient, JPanel> recipientReverseMap = new HashMap<>();
+    // Linking every layer JPanel representation to their logical classes
+    private static Map<JPanel, Layer> panelLayerMap = new HashMap<>();
 
     public static Map<JPanel, Sender> getSenderMap() {
         return senderMap;
-    }
-
-    public static void setSenderMap(Map<JPanel, Sender> senderMap) {
-        Storage.senderMap = senderMap;
     }
 
     public static void addSender(JPanel panel, Sender sender) {
@@ -32,24 +42,48 @@ public class Storage {
         return btsSenderLayer;
     }
 
-    public static void setBtsSenderLayer(BtsLayer btsSenderLayer) {
+    public static void setBtsSenderLayer(JPanel layerPanel, BtsLayer btsSenderLayer) {
         Storage.btsSenderLayer = btsSenderLayer;
+        panelLayerMap.put(layerPanel, btsSenderLayer);
     }
 
-    public static List<BscLayer> getBscLayersList() {
-        return bscLayersList;
+    public static Map<JPanel, BscLayer> getBscLayerMap() {
+        return bscLayerMap;
     }
 
-    public static void setBscLayersList(List<BscLayer> bscLayersList) {
-        Storage.bscLayersList = bscLayersList;
+    public static Map<BscLayer, JPanel> getBscLayerReverseMap() {
+        return bscLayerReverseMap;
+    }
+
+    public static List<BscLayer> getBscLayerList() {
+        return bscLayerList;
+    }
+
+    public static void addBscLayer(JPanel panel, BscLayer layer) {
+        bscLayerList.add(layer);
+        bscLayerMap.put(panel, layer);
+        bscLayerReverseMap.put(layer, panel);
+        panelLayerMap.put(panel, layer);
+    }
+
+    public static void removeBscLayer(JPanel panel) {
+        bscLayerList.remove(bscLayerMap.get(panel));
+        bscLayerReverseMap.remove(bscLayerMap.get(panel));
+        bscLayerMap.remove(panel);
+        panelLayerMap.remove(panel);
     }
 
     public static BtsLayer getBtsRecipientLayer() {
         return btsRecipientLayer;
     }
 
-    public static void setBtsRecipientLayer(BtsLayer btsRecipientLayer) {
+    public static void setBtsRecipientLayer(JPanel layerPanel, BtsLayer btsRecipientLayer) {
         Storage.btsRecipientLayer = btsRecipientLayer;
+        panelLayerMap.put(layerPanel, btsRecipientLayer);
+    }
+
+    public static void addPanelStation(JPanel panel, Layer.Station station) {
+
     }
 
     public static Map<JPanel, Recipient> getRecipientMap() {
@@ -72,5 +106,17 @@ public class Storage {
 
     public static Map<Recipient, JPanel> getRecipientReverseMap() {
         return recipientReverseMap;
+    }
+
+    public static Map<JPanel, Layer.Station> getPanelStationMap() {
+        return panelStationMap;
+    }
+
+    public static void removeStation(JPanel stationPanel) {
+        panelStationMap.remove(stationPanel);
+    }
+
+    public static Map<JPanel, Layer> getPanelLayerMap() {
+        return panelLayerMap;
     }
 }

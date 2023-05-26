@@ -5,11 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseSectionPanel extends JPanel {
-    private List<BaseLayerPanel> baseLayerPanelList = new ArrayList<>();
+    private final List<BaseLayerPanel> baseLayerPanelList = new ArrayList<>();
+    private BaseController controller;
 
-    public BaseLayerPanel createLayer() {
+    public BaseSectionPanel() {
+        controller = new BaseController(this);
+    }
+    public List<BaseLayerPanel> getBaseLayerPanelList() {
+        return baseLayerPanelList;
+    }
+
+    public BaseLayerPanel createLayer(boolean isBts) {
         BaseLayerPanel layer = this.new BaseLayerPanel();
-        layer.createStation(layer);
 
         layer.setAlignmentY(TOP_ALIGNMENT);
         layer.setBorder(new LineBorder(Color.BLACK, 2));
@@ -17,21 +24,36 @@ public class BaseSectionPanel extends JPanel {
         
         baseLayerPanelList.add(layer);
 
+        if(isBts && Storage.getBtsSenderLayer() != null) controller.createBtsRecipientLayer(layer);
+        else if(isBts) controller.createBtsSenderLayer(layer);
+        else controller.addBscLayer(layer);
+
+        layer.createStation();
+
         this.add(layer);
         return layer;
     }
 
     public void removeLayer() {
         if(baseLayerPanelList.size() != 1) {
-            remove(baseLayerPanelList.get(baseLayerPanelList.size() - 1));
-            baseLayerPanelList.remove(baseLayerPanelList.size() - 1);
+            BaseLayerPanel layer = baseLayerPanelList.get(baseLayerPanelList.size() - 1);
+            remove(layer);
+            baseLayerPanelList.remove(layer);
+            controller.removeBscLayer(layer);
+            for (JPanel station : layer.getBaseStationsList()) {
+                controller.removeStation(station);
+            }
         }
     }
 
     class BaseLayerPanel extends JPanel {
-        private List<JPanel> baseStationsList = new ArrayList<>();
+        private final List<JPanel> baseStationsList = new ArrayList<>();
 
-        public void createStation(BaseLayerPanel stationLayer) {
+        public List<JPanel> getBaseStationsList() {
+            return baseStationsList;
+        }
+
+        public void createStation() {
             JPanel station = new JPanel();
 
             JLabel stationNumber = new JLabel("number");
@@ -40,13 +62,14 @@ public class BaseSectionPanel extends JPanel {
             stationTerminate.setAlignmentX(CENTER_ALIGNMENT);
             stationTerminate.addActionListener(e -> {
                 if (baseLayerPanelList.size() != 1 || baseStationsList.size() != 1) {
-                    stationLayer.remove(station);
+                    remove(station);
                     baseStationsList.remove(station);
-
-                    if(stationLayer.baseStationsList.size() == 0) {
+                    System.out.println(this);
+                    controller.removeStation(station);
+                    if(baseStationsList.size() == 0) {
                         revalidate();
-                        baseLayerPanelList.remove(stationLayer);
-                        BaseSectionPanel.this.remove(stationLayer);
+                        baseLayerPanelList.remove(this);
+                        BaseSectionPanel.this.remove(this);
                     }
 
                     revalidate();
@@ -59,8 +82,10 @@ public class BaseSectionPanel extends JPanel {
             station.add(stationTerminate);
 
 
-            stationLayer.add(station);
-            stationLayer.baseStationsList.add(station);
+            add(station);
+            baseStationsList.add(station);
+
+            controller.createStation(this, station);
         }
     }
 }
