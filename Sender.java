@@ -32,6 +32,7 @@ public class Sender extends Thread {
 
     @Override
     public void run() {
+        System.out.println(this + " started");
         while(!isInterrupted()) {
             sendSms();
             System.out.println("Sender sent the message");

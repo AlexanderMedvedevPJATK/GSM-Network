@@ -18,6 +18,7 @@ public class BasesSectionPanel extends JPanel {
         bscSectionWrapper.setBackground(Color.ORANGE);
         bscSectionWrapper.setAlignmentY(TOP_ALIGNMENT);
 
+        
         BaseSectionPanel bscPanel = new BaseSectionPanel();
         bscPanel.setLayout(new BoxLayout(bscPanel, BoxLayout.X_AXIS));
         bscPanel.createLayer(false);

@@ -3,11 +3,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class BaseController {
+public class BaseController implements SmsOverflowListener {
     BaseSectionPanel baseSectionPanel;
 
     public BaseController(BaseSectionPanel baseSectionPanel) {
         this.baseSectionPanel = baseSectionPanel;
+        Layer.setListener(this);
     }
 
     public void createStation(JPanel layerPanel, JPanel stationPanel) {
@@ -21,12 +22,12 @@ public class BaseController {
     }
 
     public void createBtsSenderLayer(JPanel layerPanel) {
-        BtsLayer btsLayer = new BtsLayer();
+        BtsLayer btsLayer = new BtsLayer(true);
         Storage.setBtsSenderLayer(layerPanel, btsLayer);
     }
 
     public void createBtsRecipientLayer(JPanel layerPanel) {
-        BtsLayer btsLayer = new BtsLayer();
+        BtsLayer btsLayer = new BtsLayer(false);
         Storage.setBtsRecipientLayer(layerPanel, btsLayer);
     }
 
@@ -41,5 +42,11 @@ public class BaseController {
             station.removeStation();
         }
         Storage.removeBscLayer(panel);
+    }
+
+    @Override
+    public void createStation(Layer layer) {
+        ((BaseSectionPanel.BaseLayerPanel) Storage.getLayerPanelMap().get(layer)).createStation();
+
     }
 }

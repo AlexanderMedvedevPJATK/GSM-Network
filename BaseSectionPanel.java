@@ -86,6 +86,8 @@ public class BaseSectionPanel extends JPanel {
             baseStationsList.add(station);
 
             controller.createStation(this, station);
+
+            revalidate();
         }
     }
 }

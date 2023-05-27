@@ -25,6 +25,8 @@ public class Storage {
     private static Map<Recipient, JPanel> recipientReverseMap = new HashMap<>();
     // Linking every layer JPanel representation to their logical classes
     private static Map<JPanel, Layer> panelLayerMap = new HashMap<>();
+    // Reversed
+    private static Map<Layer, JPanel> layerPanelMap = new HashMap<>();
 
     public static Map<JPanel, Sender> getSenderMap() {
         return senderMap;
@@ -45,6 +47,7 @@ public class Storage {
     public static void setBtsSenderLayer(JPanel layerPanel, BtsLayer btsSenderLayer) {
         Storage.btsSenderLayer = btsSenderLayer;
         panelLayerMap.put(layerPanel, btsSenderLayer);
+        layerPanelMap.put(btsSenderLayer, layerPanel);
     }
 
     public static Map<JPanel, BscLayer> getBscLayerMap() {
@@ -64,9 +67,11 @@ public class Storage {
         bscLayerMap.put(panel, layer);
         bscLayerReverseMap.put(layer, panel);
         panelLayerMap.put(panel, layer);
+        layerPanelMap.put(layer, panel);
     }
 
     public static void removeBscLayer(JPanel panel) {
+        layerPanelMap.remove(bscLayerMap.get(panel));
         bscLayerList.remove(bscLayerMap.get(panel));
         bscLayerReverseMap.remove(bscLayerMap.get(panel));
         bscLayerMap.remove(panel);
@@ -80,18 +85,11 @@ public class Storage {
     public static void setBtsRecipientLayer(JPanel layerPanel, BtsLayer btsRecipientLayer) {
         Storage.btsRecipientLayer = btsRecipientLayer;
         panelLayerMap.put(layerPanel, btsRecipientLayer);
-    }
-
-    public static void addPanelStation(JPanel panel, Layer.Station station) {
-
+        layerPanelMap.put(btsRecipientLayer, layerPanel);
     }
 
     public static Map<JPanel, Recipient> getRecipientMap() {
         return recipientMap;
-    }
-
-    public static void setRecipientMap(Map<JPanel, Recipient> recipientMap) {
-        Storage.recipientMap = recipientMap;
     }
 
     public static void addRecipient(JPanel panel, Recipient recipient) {
@@ -118,5 +116,9 @@ public class Storage {
 
     public static Map<JPanel, Layer> getPanelLayerMap() {
         return panelLayerMap;
+    }
+
+    public static Map<Layer, JPanel> getLayerPanelMap() {
+        return layerPanelMap;
     }
 }
