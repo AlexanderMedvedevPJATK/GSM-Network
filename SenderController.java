@@ -10,7 +10,7 @@ public class SenderController {
 
     public void createSender(String sms, JPanel panel) {
         Sender sender = new Sender(sms, ++number);
-        Storage.addSender(panel, sender);
+        Storage.getSenderMap().put(panel, sender);
         sender.start();
     }
 

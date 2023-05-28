@@ -2,11 +2,12 @@ public class Sender extends Thread {
 
     private final int number;
     private final SMS sms;
+    private int smsCounter;
     private final Recipient recipient;
-    private int frequency = 10;
+    private int frequency = 5;
     private boolean running = true;
 
-    public Sender(String sms, int number) {
+    public Sender(String smsText, int number) {
         if (Storage.getRecipientMap().size() == 0) {
             recipient = null;
         } else {
@@ -14,7 +15,12 @@ public class Sender extends Thread {
             recipient = (Recipient) recipientArr[(int) (Math.random() * recipientArr.length)];
         }
         this.number = number;
-        this.sms = new SMS(this, sms, recipient);
+        this.sms = new SMS(this, smsText, recipient);
+        Storage.getSenderSmsMap().put(this, sms);
+    }
+
+    public int getNumber() {
+        return number;
     }
 
     public void setFrequency(int frequency) {
@@ -32,10 +38,8 @@ public class Sender extends Thread {
 
     @Override
     public void run() {
-        System.out.println(this + " started");
         while(!isInterrupted()) {
             sendSms();
-            System.out.println("Sender sent the message");
             try {
                 Thread.sleep(60000 / frequency);
             } catch (InterruptedException e) {
@@ -54,6 +58,7 @@ public class Sender extends Thread {
                 e.printStackTrace();
             }
         }
+        System.out.println(this + " sent the message");
         Storage.getBtsSenderLayer().assignSms(sms);
     }
 }

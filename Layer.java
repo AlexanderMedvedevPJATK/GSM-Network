@@ -1,5 +1,6 @@
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Layer {
@@ -15,8 +16,8 @@ public abstract class Layer {
     }
 
     synchronized public void assignSms(SMS sms) {
-        int minSmsNumber = stations.get(0).smsCounter;
         Station minStation = stations.get(0);
+        int minSmsNumber = minStation.smsCounter;
         for (Station station : stations) {
             if (station.smsCounter == 0 || station.smsCounter < minSmsNumber) {
                 minStation = station;
@@ -29,22 +30,23 @@ public abstract class Layer {
         Station station = createStation();
         stations.add(station);
         station.start();
-        System.out.println(station + " started");
         return station;
     }
     public abstract Station createStation();
     public abstract class Station extends Thread {
         protected SMS[] smsArr = new SMS[5];
-        private int smsCounter;
+        protected int smsCounter;
+        private final int MAX_SMS = 5;
 
         public void addSms(SMS sms) {
-            smsArr[smsCounter++] = sms;
-            if (smsCounter == 5) {
+            smsArr[smsCounter] = sms;
+            smsCounter++; // IMPORTANT TO INCREMENT AFTER ASSIGNMENT
+            if (smsCounter == MAX_SMS) {
                 listener.createStation(Layer.this);
             }
         }
 
-        public void shiftSms() {
+        synchronized public void shiftSms() {
             smsCounter--;
             if (smsCounter != 0) {
                 for (int i = 0; i < smsCounter; i++) {
@@ -55,7 +57,13 @@ public abstract class Layer {
         public abstract void sendSms(SMS sms);
 
         public void sendAllSms() {
-            for (SMS sms : smsArr) sendSms(sms);
+
+            for (int i = 0; smsCounter != 0; i++) {
+                System.out.println("sent");
+                sendSms(smsArr[i]); // smsCounter is reduced in here
+                System.out.println(smsCounter);
+            }
+            System.out.println(smsCounter);
         }
 
         public void removeStation() {
@@ -65,18 +73,21 @@ public abstract class Layer {
 
         @Override
         public void run() {
-            while(!isInterrupted()) {
-                while (smsArr[0] == null) {
-                    try {
-                        Thread.sleep(50000);
-                    } catch (InterruptedException e) {
-                        interrupt();
-                        break;
+            while (!isInterrupted()) {
+                if(smsCounter > 0) {
+                    if(smsArr[0].getTimeToSend() <= System.currentTimeMillis()) {
+                        sendSms(smsArr[0]);
+                    } else {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            interrupt();
+                        }
                     }
                 }
-                sendSms(smsArr[0]);
             }
-            System.out.println(this + "has finished");
+            System.out.println("Sending all sms");
+            sendAllSms();
         }
     }
 }

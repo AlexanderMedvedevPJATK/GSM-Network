@@ -45,10 +45,10 @@ public class RecipientPanel extends JPanel {
         JLabel phoneNumber = new JLabel("SMS received: 0");
         phoneNumber.setAlignmentX(CENTER_ALIGNMENT);
 
-        JCheckBox checkBox = new JCheckBox("Clear every 10 sec");
-        checkBox.setVerticalTextPosition(SwingConstants.TOP);
-        checkBox.setHorizontalTextPosition(SwingConstants.CENTER);
+        JCheckBox checkBox = new JCheckBox("Clear every 10 sec ");
+        checkBox.setHorizontalTextPosition(SwingConstants.LEFT);
         checkBox.setAlignmentX(CENTER_ALIGNMENT);
+        checkBox.setVerticalAlignment(SwingConstants.CENTER);
         checkBox.addActionListener(e -> {
             new Thread(() -> {
                 while (checkBox.isSelected()) {
@@ -77,13 +77,13 @@ public class RecipientPanel extends JPanel {
         recipient.setLayout(new BoxLayout(recipient, BoxLayout.Y_AXIS));
         recipient.setBorder(new LineBorder(Color.BLACK, 2));
 
-        recipient.add(Box.createRigidArea(new Dimension(180, 10)));
+        recipient.add(Box.createRigidArea(new Dimension(190, 10)));
         recipient.add(phoneNumber);
-        recipient.add(Box.createRigidArea(new Dimension(180, 7)));
+        recipient.add(Box.createRigidArea(new Dimension(190, 7)));
         recipient.add(checkBox);
-        recipient.add(Box.createRigidArea(new Dimension(180, 7)));
+        recipient.add(Box.createRigidArea(new Dimension(190, 7)));
         recipient.add(terminate);
-        recipient.add(Box.createRigidArea(new Dimension(180, 10)));
+        recipient.add(Box.createRigidArea(new Dimension(190, 10)));
 
         recipientDevicesPanel.add(recipient);
 

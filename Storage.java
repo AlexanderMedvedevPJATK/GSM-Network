@@ -7,6 +7,8 @@ import java.util.Map;
 public class Storage {
     // Linking JPanel representations of senders to their logical classes
     private static Map<JPanel, Sender> senderMap = new HashMap<>();
+    // Linking each sender to the SMS it's sending
+    private static Map<Sender, SMS> senderSmsMap = new HashMap<>();
     // The first BTS layer
     private static BtsLayer btsSenderLayer;
     // All the BSC layers
@@ -32,12 +34,8 @@ public class Storage {
         return senderMap;
     }
 
-    public static void addSender(JPanel panel, Sender sender) {
-        senderMap.put(panel, sender);
-    }
-
-    public static void removeSender(JPanel panel) {
-        senderMap.remove(panel);
+    public static Map<Sender, SMS> getSenderSmsMap() {
+        return senderSmsMap;
     }
 
     public static BtsLayer getBtsSenderLayer() {

@@ -4,8 +4,8 @@ import java.awt.*;
 import java.util.Objects;
 
 public class SenderPanel extends JPanel {
-
-    SenderController controller;
+    private int senderNumber;
+    private SenderController controller;
 
     public SenderPanel() {
         controller = new SenderController(this);
@@ -60,7 +60,12 @@ public class SenderPanel extends JPanel {
 
     public JPanel makeSenderDevice(JPanel senderDevicesPanel) {
         JPanel sender = new JPanel();
-        JLabel phoneNumber = new JLabel("phoneNumber");
+
+        JTextField phoneNumber = new JTextField(String.valueOf(senderNumber++));
+        phoneNumber.setEditable(false);
+        phoneNumber.setHorizontalAlignment(SwingConstants.CENTER);
+        phoneNumber.setMaximumSize(new Dimension(110, 20));
+
         JLabel sliderText = new JLabel("SMS per minute");
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 10);
         slider.setPaintTicks(true);
@@ -69,16 +74,22 @@ public class SenderPanel extends JPanel {
         slider.addChangeListener(e -> {
             controller.setFrequency(slider.getValue(), sender);
         });
+
         JButton terminate = new JButton("Terminate");
         terminate.addActionListener(e -> {
             controller.terminateSender(sender);
             senderDevicesPanel.remove(sender);
             revalidate();
         });
+
+        JPanel stateWrapper = new JPanel();
         JLabel stateText = new JLabel("State");
         JComboBox<String> stateOptions = new JComboBox<>(new String[] {
                 "ON", "OFF"
         });
+        stateWrapper.add(stateText);
+        stateWrapper.add(stateOptions);
+
         stateOptions.addActionListener(e -> {
             controller.setRunning(Objects.equals(stateOptions.getSelectedItem(), "ON"), sender);
         });
@@ -96,8 +107,7 @@ public class SenderPanel extends JPanel {
         sender.add(sliderText);
         sender.add(slider);
         sender.add(Box.createRigidArea(new Dimension(180, 10)));
-        sender.add(stateText);
-        sender.add(stateOptions);
+        sender.add(stateWrapper);
         sender.add(Box.createRigidArea(new Dimension(180, 5)));
         sender.add(terminate);
         sender.add(Box.createRigidArea(new Dimension(180, 10)));

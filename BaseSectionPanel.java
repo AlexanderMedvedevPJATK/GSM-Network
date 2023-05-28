@@ -7,12 +7,17 @@ import java.util.List;
 public class BaseSectionPanel extends JPanel {
     private final List<BaseLayerPanel> baseLayerPanelList = new ArrayList<>();
     private BaseController controller;
+    private static int stationNumber;
 
     public BaseSectionPanel() {
         controller = new BaseController(this);
     }
     public List<BaseLayerPanel> getBaseLayerPanelList() {
         return baseLayerPanelList;
+    }
+
+    public int getStationNumber() {
+        return stationNumber++;
     }
 
     public BaseLayerPanel createLayer(boolean isBts) {
@@ -40,9 +45,7 @@ public class BaseSectionPanel extends JPanel {
             remove(layer);
             baseLayerPanelList.remove(layer);
             controller.removeBscLayer(layer);
-            for (JPanel station : layer.getBaseStationsList()) {
-                controller.removeStation(station);
-            }
+            repaint();
         }
     }
 
@@ -56,22 +59,19 @@ public class BaseSectionPanel extends JPanel {
         public void createStation() {
             JPanel station = new JPanel();
 
-            JLabel stationNumber = new JLabel("number");
+            JLabel stationNumber = new JLabel(String.valueOf(getStationNumber()));
             stationNumber.setAlignmentX(CENTER_ALIGNMENT);
             JButton stationTerminate = new JButton("Terminate");
             stationTerminate.setAlignmentX(CENTER_ALIGNMENT);
             stationTerminate.addActionListener(e -> {
                 if (baseLayerPanelList.size() != 1 || baseStationsList.size() != 1) {
-                    remove(station);
-                    baseStationsList.remove(station);
-                    System.out.println(this);
-                    controller.removeStation(station);
-                    if(baseStationsList.size() == 0) {
-                        revalidate();
-                        baseLayerPanelList.remove(this);
-                        BaseSectionPanel.this.remove(this);
+                    if(baseStationsList.size() == 1) {
+                        BaseSectionPanel.this.removeLayer();
+                    } else {
+                        remove(station);
+                        baseStationsList.remove(station);
+                        controller.removeStation(station);
                     }
-
                     revalidate();
                 }
             });
@@ -87,7 +87,7 @@ public class BaseSectionPanel extends JPanel {
 
             controller.createStation(this, station);
 
-            revalidate();
+            BaseSectionPanel.this.revalidate();
         }
     }
 }

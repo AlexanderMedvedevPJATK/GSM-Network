@@ -1,5 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Main extends JFrame {
 
@@ -23,6 +27,27 @@ public class Main extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);
+
+
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                try (FileOutputStream fos = new FileOutputStream("VBD.txt")) {
+
+//                    fos.write();
+
+
+                    System.out.println("Data written to the file successfully.");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                dispose();
+
+            }
+        });
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::new);

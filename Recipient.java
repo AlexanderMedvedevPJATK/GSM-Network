@@ -11,8 +11,30 @@ public class Recipient extends Thread {
         Recipient.listener = listener;
     }
 
-    public void setSms(SMS sms) {
+    synchronized public void setSms(SMS sms) {
+        while (this.sms != null) {
+            try {
+                System.out.println("waiting in setSms");
+                wait();
+            } catch (InterruptedException ignored) {}
+        }
+        System.out.println("Set the message");
         this.sms = sms;
+        notify();
+    }
+
+    synchronized public void getSms() {
+        while (sms == null) {
+            try {
+                System.out.println("waiting in getSms");
+                wait();
+            } catch(InterruptedException ignored) {}
+        }
+        System.out.println("Got the message");
+        sms = null;
+        listener.changeLabel(this, ++counter);
+        System.out.println("Changed the label to " + counter);
+        notify();
     }
 
     public void setCounter(int counter) {
@@ -21,16 +43,14 @@ public class Recipient extends Thread {
 
     @Override
     public void run() {
-        while(true) {
-            if (sms != null) {
-                listener.changeLabel(this, ++counter);
-                sms = null;
-                System.out.println("Recipient got the message");
-            }
+        while(!isInterrupted()) {
+            System.out.println("running");
+            getSms();
+
             try {
-                Thread.sleep(1500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                interrupt();
             }
         }
     }
