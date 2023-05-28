@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class BaseController implements SmsOverflowListener {
     BaseSectionPanel baseSectionPanel;

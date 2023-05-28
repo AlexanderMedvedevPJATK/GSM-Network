@@ -23,6 +23,10 @@ public class Sender extends Thread {
         return number;
     }
 
+    public int getSmsCounter() {
+        return smsCounter;
+    }
+
     public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
@@ -51,14 +55,12 @@ public class Sender extends Thread {
     synchronized public void sendSms() {
         if(!running) {
             try {
-                System.out.println("The device is turned off");
                 wait();
-                System.out.println("The device is turned on");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println(this + " sent the message");
         Storage.getBtsSenderLayer().assignSms(sms);
+        smsCounter++;
     }
 }

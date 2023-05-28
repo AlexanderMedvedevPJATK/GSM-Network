@@ -8,7 +8,7 @@ public class SenderPanel extends JPanel {
     private SenderController controller;
 
     public SenderPanel() {
-        controller = new SenderController(this);
+        controller = new SenderController();
 
         setBackground(Color.RED);
 
@@ -29,7 +29,7 @@ public class SenderPanel extends JPanel {
         button.setMinimumSize(new Dimension(100, 40));
         button.addActionListener(e -> {
             String sms = "";
-            while (sms.equals("")) {
+            while (sms.trim().equals("")) {
                 sms = JOptionPane.showInputDialog(
                         null,
                         "Enter the sms",
@@ -37,10 +37,10 @@ public class SenderPanel extends JPanel {
                         JOptionPane.PLAIN_MESSAGE);
                 if (sms == null) {
                     break;
-                } else if (sms.isEmpty()) {
+                } else if (sms.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a message.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    controller.createSender(sms, makeSenderDevice(senderDevicesPanel));
+                    controller.createSender(sms.trim(), makeSenderDevice(senderDevicesPanel));
                     revalidate();
                 }
             }
@@ -101,16 +101,16 @@ public class SenderPanel extends JPanel {
         sender.setLayout(new BoxLayout(sender, BoxLayout.Y_AXIS));
         sender.setBorder(new LineBorder(Color.BLACK, 2));
 
-        sender.add(Box.createRigidArea(new Dimension(180, 10)));
+        sender.add(Box.createRigidArea(new Dimension(180, 5)));
         sender.add(phoneNumber);
-        sender.add(Box.createRigidArea(new Dimension(180, 10)));
+        sender.add(Box.createRigidArea(new Dimension(180, 5)));
         sender.add(sliderText);
         sender.add(slider);
-        sender.add(Box.createRigidArea(new Dimension(180, 10)));
+        sender.add(Box.createRigidArea(new Dimension(180, 5)));
         sender.add(stateWrapper);
         sender.add(Box.createRigidArea(new Dimension(180, 5)));
         sender.add(terminate);
-        sender.add(Box.createRigidArea(new Dimension(180, 10)));
+        sender.add(Box.createRigidArea(new Dimension(180, 5)));
 
         senderDevicesPanel.add(sender);
 

@@ -6,27 +6,24 @@ import java.util.List;
 
 public class BaseSectionPanel extends JPanel {
     private final List<BaseLayerPanel> baseLayerPanelList = new ArrayList<>();
-    private BaseController controller;
+    private final BaseController controller;
     private static int stationNumber;
 
     public BaseSectionPanel() {
         controller = new BaseController(this);
-    }
-    public List<BaseLayerPanel> getBaseLayerPanelList() {
-        return baseLayerPanelList;
     }
 
     public int getStationNumber() {
         return stationNumber++;
     }
 
-    public BaseLayerPanel createLayer(boolean isBts) {
+    public void createLayer(boolean isBts) {
         BaseLayerPanel layer = this.new BaseLayerPanel();
 
         layer.setAlignmentY(TOP_ALIGNMENT);
         layer.setBorder(new LineBorder(Color.BLACK, 2));
         layer.setLayout(new BoxLayout(layer, BoxLayout.Y_AXIS));
-        
+
         baseLayerPanelList.add(layer);
 
         if(isBts && Storage.getBtsSenderLayer() != null) controller.createBtsRecipientLayer(layer);
@@ -36,7 +33,6 @@ public class BaseSectionPanel extends JPanel {
         layer.createStation();
 
         this.add(layer);
-        return layer;
     }
 
     public void removeLayer() {
@@ -51,10 +47,6 @@ public class BaseSectionPanel extends JPanel {
 
     class BaseLayerPanel extends JPanel {
         private final List<JPanel> baseStationsList = new ArrayList<>();
-
-        public List<JPanel> getBaseStationsList() {
-            return baseStationsList;
-        }
 
         public void createStation() {
             JPanel station = new JPanel();

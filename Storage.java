@@ -4,31 +4,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Storage {
+class Storage {
     // Linking JPanel representations of senders to their logical classes
-    private static Map<JPanel, Sender> senderMap = new HashMap<>();
+    private final static Map<JPanel, Sender> senderMap = new HashMap<>();
     // Linking each sender to the SMS it's sending
-    private static Map<Sender, SMS> senderSmsMap = new HashMap<>();
+    private final static Map<Sender, SMS> senderSmsMap = new HashMap<>();
     // The first BTS layer
     private static BtsLayer btsSenderLayer;
     // All the BSC layers
-    private static List<BscLayer> bscLayerList = new ArrayList<>();
+    private final static List<BscLayer> bscLayerList = new ArrayList<>();
     // Linking JPanel representations of BscLayers to their logical classes
-    private static Map<JPanel, BscLayer> bscLayerMap = new HashMap<>();
-    // Reversed
-    private static Map<BscLayer, JPanel> bscLayerReverseMap = new HashMap<>();
+    private final static Map<JPanel, BscLayer> bscLayerMap = new HashMap<>();
     // The last BTS layer
     private static BtsLayer btsRecipientLayer;
     // Linking JPanel representations of the stations to their logical classes
-    private static Map<JPanel, Layer.Station> panelStationMap = new HashMap<>();
+    private final static Map<JPanel, Layer.Station> panelStationMap = new HashMap<>();
     // Linking JPanel representations of the recipients to their logical classes
-    private static Map<JPanel, Recipient> recipientMap = new HashMap<>();
+    private final static Map<JPanel, Recipient> recipientMap = new HashMap<>();
     // Reversed
-    private static Map<Recipient, JPanel> recipientReverseMap = new HashMap<>();
+    private final static Map<Recipient, JPanel> recipientReverseMap = new HashMap<>();
     // Linking every layer JPanel representation to their logical classes
-    private static Map<JPanel, Layer> panelLayerMap = new HashMap<>();
+    private final static Map<JPanel, Layer> panelLayerMap = new HashMap<>();
     // Reversed
-    private static Map<Layer, JPanel> layerPanelMap = new HashMap<>();
+    private final static Map<Layer, JPanel> layerPanelMap = new HashMap<>();
 
     public static Map<JPanel, Sender> getSenderMap() {
         return senderMap;
@@ -52,10 +50,6 @@ public class Storage {
         return bscLayerMap;
     }
 
-    public static Map<BscLayer, JPanel> getBscLayerReverseMap() {
-        return bscLayerReverseMap;
-    }
-
     public static List<BscLayer> getBscLayerList() {
         return bscLayerList;
     }
@@ -63,7 +57,6 @@ public class Storage {
     public static void addBscLayer(JPanel panel, BscLayer layer) {
         bscLayerList.add(layer);
         bscLayerMap.put(panel, layer);
-        bscLayerReverseMap.put(layer, panel);
         panelLayerMap.put(panel, layer);
         layerPanelMap.put(layer, panel);
     }
@@ -71,7 +64,6 @@ public class Storage {
     public static void removeBscLayer(JPanel panel) {
         layerPanelMap.remove(bscLayerMap.get(panel));
         bscLayerList.remove(bscLayerMap.get(panel));
-        bscLayerReverseMap.remove(bscLayerMap.get(panel));
         bscLayerMap.remove(panel);
         panelLayerMap.remove(panel);
     }

@@ -3,9 +3,9 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class RecipientPanel extends JPanel {
-    private RecipientController controller;
+    private final RecipientController controller;
     public RecipientPanel() {
-        controller = new RecipientController(this);
+        controller = new RecipientController();
 
         setBackground(Color.DARK_GRAY);
 

@@ -1,10 +1,8 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class Layer {
-    private List<Station> stations = new ArrayList<>();
+    private final List<Station> stations = new ArrayList<>();
     private static SmsOverflowListener listener;
 
     public List<Station> getStations() {
@@ -59,11 +57,8 @@ public abstract class Layer {
         public void sendAllSms() {
 
             for (int i = 0; smsCounter != 0; i++) {
-                System.out.println("sent");
                 sendSms(smsArr[i]); // smsCounter is reduced in here
-                System.out.println(smsCounter);
             }
-            System.out.println(smsCounter);
         }
 
         public void removeStation() {
@@ -86,7 +81,6 @@ public abstract class Layer {
                     }
                 }
             }
-            System.out.println("Sending all sms");
             sendAllSms();
         }
     }

@@ -1,13 +1,17 @@
 public class SMS {
-    private Sender sender;
-    private String text;
-    private Recipient recipient;
+    private final Sender sender;
+    private final String text;
+    private final Recipient recipient;
     private long timeToSend;
 
     public SMS(Sender sender, String text, Recipient recipient) {
         this.sender = sender;
         this.text = text;
         this.recipient = recipient;
+    }
+
+    public String getText() {
+        return text;
     }
 
     public long getTimeToSend() {

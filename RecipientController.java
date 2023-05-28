@@ -1,13 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
 
 public class RecipientController implements LabelChangeListener {
-    private RecipientPanel recipientPanel;
-    private int number;
 
-    public RecipientController(RecipientPanel recipientPanel) {
-        this.recipientPanel = recipientPanel;
+    public RecipientController() {
         Recipient.setListener(this);
     }
 
